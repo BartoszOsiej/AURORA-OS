@@ -383,12 +383,14 @@ export function buildCommands(): CmdDef[] {
       const fsInfo = fs.stat('/').kind;
       void fsInfo;
       s.print('');
+      const width = typeof innerWidth !== 'undefined' ? innerWidth : 80;
+      const height = typeof innerHeight !== 'undefined' ? innerHeight : 24;
       s.print('          ██████   ╭─────────────────────────────╮');
       s.print('        ██      ██  os        ' + os.padEnd(24) + '│');
       s.print('       ██  ██ ██ ██  host      aurora-desktop' + ' '.repeat(8) + '│');
       s.print('      ██  ████  ████  kernel     ' + kernel.padEnd(22) + '│');
       s.print('     ██  ██████  ████  shell      ' + shell.padEnd(22) + '│');
-      s.print('    ██  ████████  ████  resolution ' + `${innerWidth}x${innerHeight}`.padEnd(22) + '│');
+      s.print('    ██  ████████  ████  resolution ' + `${width}x${height}`.padEnd(22) + '│');
       s.print('    ██████████████████  uptime     (see uptime)' + ' '.repeat(9) + '│');
       s.print('      ███████████████   ╰─────────────────────────────╯');
       s.print('');
@@ -562,6 +564,9 @@ export function buildCommands(): CmdDef[] {
   return list;
 }
 
+/** Command table built once at module load and reused by runCommand. */
+const COMMANDS: CmdDef[] = buildCommands();
+
 /** Set once at module load for `uptime`. */
 const BOOT_TIME = Date.now();
 
@@ -617,8 +622,7 @@ export function runCommand(
     },
   };
 
-  const commands = buildCommands();
-  const cmd = commands.find((c) => c.name === name);
+  const cmd = COMMANDS.find((c) => c.name === name);
 
   if (name === 'clear') {
     shell.print('\u001b[2J\u001b[H');

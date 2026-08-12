@@ -114,10 +114,15 @@ export class WindowManager {
   close(id: string): void {
     const win = this.wins.get(id);
     if (!win) return;
+    // Already closing (e.g. triggered by both the ✕ button and an app-exit).
+    if (win.el.classList.contains('win-closing')) return;
     win.el.classList.add('win-closing');
     setTimeout(() => {
       win.el.remove();
       this.wins.delete(id);
+      // Notify the app so it can clean up timers/subscriptions, and let the
+      // registry reap the process.
+      win.content.dispatchEvent(new CustomEvent('app-exit'));
       bus.emit(EV.WINDOW_CLOSE, win.state);
       this.focusTop();
     }, 140);

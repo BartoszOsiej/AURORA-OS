@@ -73,8 +73,13 @@ export class AppRegistry {
       resizable: app.resizable ?? true,
       body,
     });
-    // Auto-close process when the window closes.
+    // Auto-close the process when the window closes. The flag guards against
+    // double dispatch: the ✕ button and the app itself may both emit
+    // 'app-exit' during a single close cycle.
+    let closed = false;
     const onClose = () => {
+      if (closed) return;
+      closed = true;
       ctx.windows.close(win.id);
       ctx.processes.exit(pid);
     };

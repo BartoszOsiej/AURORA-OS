@@ -18,8 +18,8 @@ export function createTerminalApp(ctx: AppContext): HTMLElement {
     kill: (pid) => ctx.processes.kill(pid),
     apps: ctx.registry.list().map((a) => ({ id: a.id, name: a.name, icon: a.icon, category: a.category })),
     launch: (appId, args) => {
-      ctx.registry.launch(appId, { fs: ctx.fs, windows: ctx.windows, processes: ctx.processes, args, shell: (c) => { void c; } });
-      return true;
+      const pid = ctx.registry.launch(appId, { fs: ctx.fs, windows: ctx.windows, processes: ctx.processes, args, shell: (c) => { void c; } });
+      return pid !== null;
     },
     history: [],
     reboot: () => window.location.reload(),

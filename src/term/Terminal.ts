@@ -95,7 +95,8 @@ export class Terminal {
     this.setInput('');
     this.renderPrompt();
     // Print the echoed command before the prompt line
-    this.print(`<span class="t-cmd">${line.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>`);
+    const safe = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    this.print(`<span class="t-cmd">${safe}</span>`);
     if (line.trim()) this.history.push(line);
     this.histIdx = this.history.length;
     if (line.trim() === 'clear') {
