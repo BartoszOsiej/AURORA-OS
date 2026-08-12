@@ -55,7 +55,7 @@ export class ProcessManager {
   kill(pid: number): boolean {
     const proc = this.processes.get(pid);
     if (!proc) return false;
-    bus.emit('process:kill', proc);
+    // exit() emits EV.PROCESS_EXIT; the kernel closes matching windows there.
     this.exit(pid);
     return true;
   }

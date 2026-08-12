@@ -468,6 +468,16 @@ async function boot(): Promise<void> {
   bus.on(EV.THEME_CHANGED, (s) => applyTheme(s as SettingsState));
   bus.on(EV.VOLUME_CHANGED, (v) => sound.setEnabled(v as boolean));
 
+  // When a process dies (e.g. `kill` from the terminal), close its windows.
+  // Closing an already-closing window is a no-op, so this is safe on the
+  // normal exit path too.
+  bus.on(EV.PROCESS_EXIT, (p) => {
+    const pid = (p as { pid: number }).pid;
+    for (const w of windows.windows) {
+      if (w.pid === pid) windows.close(w.id);
+    }
+  });
+
   /* ---- ready ----------------------------------------------------- */
   bootStatus.textContent = 'Ready.';
   bootBar.style.width = '100%';

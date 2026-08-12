@@ -354,9 +354,12 @@ export class FileSystem {
     if (node.kind === 'file') {
       this.writeFile(d, node.content ?? '');
     } else {
+      // Snapshot the children BEFORE mkdirp(d) so a destination nested inside
+      // the source (e.g. `cp a a/b`) cannot recurse into itself forever.
+      const children = [...(node.children ?? []).keys()];
       this.mkdirp(d);
-      for (const child of node.children ?? []) {
-        this.copy(`${s}/${child[0]}`, `${d}/${child[0]}`);
+      for (const name of children) {
+        this.copy(`${s}/${name}`, `${d}/${name}`);
       }
     }
   }

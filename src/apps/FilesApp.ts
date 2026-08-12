@@ -66,7 +66,9 @@ export function createFilesApp(ctx: AppContext): HTMLElement {
       item.className = 'file-item';
       const icon = e.kind === 'dir' ? '📁' : '📄';
       const size = e.kind === 'dir' ? '' : ` · ${e.size} B`;
-      item.innerHTML = `<div class="file-ico">${icon}</div><div class="file-name">${e.name}</div><div class="file-size">${size}</div>`;
+      // Name is user-controlled — set via textContent to avoid HTML injection.
+      item.innerHTML = `<div class="file-ico">${icon}</div><div class="file-name"></div><div class="file-size">${size}</div>`;
+      (item.querySelector('.file-name') as HTMLElement).textContent = e.name;
       item.addEventListener('dblclick', () => {
         if (e.kind === 'dir') {
           cwd = `${cwd === '/' ? '' : cwd}/${e.name}`;
