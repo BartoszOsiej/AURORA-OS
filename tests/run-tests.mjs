@@ -253,6 +253,103 @@ test('shell: touch + wc', () => {
   assert(lines.some((l) => l.includes('words')), 'wc reports word count');
 });
 
+test('shell: rm removes files', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('touch gone.txt', shell, fs, ctx);
+  runCommand('rm gone.txt', shell, fs, ctx);
+  assert(!fs.exists('/home/user/gone.txt'), 'rm deletes the file');
+  assert(lines.some((l) => l.includes('removed gone.txt')), 'rm confirms');
+});
+
+test('shell: rm removes files and dirs; rm -r removes trees', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('mkdir dirx', shell, fs, ctx);
+  runCommand('rm dirx', shell, fs, ctx);
+  assert(!fs.exists('/home/user/dirx'), 'rm removes a directory');
+  runCommand('mkdir diry', shell, fs, ctx);
+  fs.writeFile('/home/user/diry/inner.txt', 'x');
+  runCommand('rm -r diry', shell, fs, ctx);
+  assert(!fs.exists('/home/user/diry'), 'rm -r removes the whole tree');
+});
+
+test('shell: cp copies and mv moves', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('touch a.txt', shell, fs, ctx);
+  runCommand('cp a.txt b.txt', shell, fs, ctx);
+  assert(fs.exists('/home/user/a.txt') && fs.exists('/home/user/b.txt'), 'cp keeps both');
+  runCommand('mv b.txt c.txt', shell, fs, ctx);
+  assert(fs.exists('/home/user/c.txt'), 'mv renames');
+  assert(!fs.exists('/home/user/b.txt'), 'mv removes the source');
+});
+
+test('shell: grep finds matches and reports count', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  fs.writeFile('/home/user/log.txt', 'info: boot ok\ninfo: ready\nwarn: low disk');
+  runCommand('grep info log.txt', shell, fs, ctx);
+  assert(lines.some((l) => l.includes('1: info: boot ok')), 'first hit line shown');
+  assert(lines.some((l) => l.includes('2 matches')), 'count reported');
+  runCommand('grep zzz log.txt', shell, fs, ctx);
+  assert(lines.some((l) => l.includes('0 matches')), 'zero matches reported');
+});
+
+test('shell: head -n limits lines', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  fs.writeFile('/home/user/many.txt', Array.from({ length: 20 }, (_, i) => `line${i}`).join('\n'));
+  runCommand('head -n 3 many.txt', shell, fs, ctx);
+  const out = lines.join('\n');
+  assert(out.includes('line0') && out.includes('line2'), 'first lines shown');
+  assert(!out.includes('line3'), 'not beyond N');
+});
+
+test('shell: whoami / hostname / uname', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('whoami', shell, fs, ctx);
+  assert(lines.some((l) => l === 'user'), 'whoami prints user');
+  runCommand('hostname', shell, fs, ctx);
+  assert(lines.some((l) => l === 'aurora'), 'hostname prints aurora');
+  runCommand('uname', shell, fs, ctx);
+  assert(lines.some((l) => l.toLowerCase().includes('aurora')), 'uname reports the OS');
+});
+
+test('shell: help and man list commands', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('help', shell, fs, ctx);
+  assert(lines.some((l) => l.includes('built-in commands')), 'help banner');
+  runCommand('help grep', shell, fs, ctx);
+  assert(lines.some((l) => l.includes('grep')), 'help for one command');
+  runCommand('man mkdir', shell, fs, ctx);
+  assert(lines.some((l) => l.includes('mkdir')), 'man shows the command');
+});
+
+test('shell: echo joins args with quotes', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('echo "hello world" ok', shell, fs, ctx);
+  assert(lines.some((l) => l === 'hello world ok'), 'echo preserves quoted space');
+});
+
+test('shell: cat reports missing files', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('cat nope.txt', shell, fs, ctx);
+  assert(lines.some((l) => l.includes('cat: nope.txt')), 'cat errors on missing file');
+});
+
+test('shell: redirection captures output to file', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('echo saved > out.txt', shell, fs, ctx);
+  assert(fs.exists('/home/user/out.txt'), 'redirection creates the file');
+  assert(fs.readFile('/home/user/out.txt').includes('saved'), 'file contains output');
+});
+
 /* --------------------------------------------------------------- summary */
 
 console.log(`\nAURORA OS core tests: ${passed} passed, ${failed} failed`);
