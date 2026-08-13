@@ -5,7 +5,7 @@
 
 ## Whole project
 
-**✅ 34/34 core tests passed · 0 failed** (`tests/run-tests.mjs` — EventBus,
+**✅ 56/56 core tests passed · 0 failed** (`tests/run-tests.mjs` — EventBus,
 FileSystem, command layer).
 
 ## Checks
