@@ -1,6 +1,12 @@
 <img src="https://capsule-render.vercel.app/api?type=hollow&color=0:2cb67d,50:7f5af0,100:0d1117&height=140&section=header&text=AURORA%20OS&fontSize=38&fontColor=7f5af0&desc=a%20complete%20operating%20system%20running%20in%20your%20browser&descSize=15&descAlignY=72" width="100%" />
 
-<div align="center">
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![npm](https://img.shields.io/badge/npm-aurora--os-blue?style=flat-square&logo=nodedotjs)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat-square&logo=typescript)
+![Docker](https://img.shields.io/badge/Docker-GHCR-2496ED?style=flat-square&logo=docker)
+![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?style=flat-square)
+
+**A complete operating system running in your browser.**
 
 [![npm](https://img.shields.io/npm/v/aurora-os?style=for-the-badge&logo=nodedotjs)](https://www.npmjs.com/package/aurora-os)
 [![GHCR](https://img.shields.io/badge/GHCR-image-2496ED?style=for-the-badge&logo=docker)](https://github.com/BartoszOsiej/AURORA-OS/pkgs/container/aurora-os)
@@ -12,25 +18,44 @@
 shell, and eight applications — entirely in TypeScript with **zero runtime
 dependencies**. No frameworks, no bundler at runtime, no server.*
 
+> 🇵🇱 [Wersja polska](README.pl.md) · [Documentation](https://bartoszosiej.github.io/Docs/projects/aurora-os/) · [Live Demo](https://bartoszosiej.github.io/AURORA-OS/)
+
 > *"Your browser is now your computer."*
 
 </div>
 
-## ✨ Features
+## Table of Contents
+
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [First Steps](#first-steps-inside-the-os)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Tests](#tests)
+- [Docker](#docker)
+- [License](#license)
+
+---
+
+## Features
 
 | Layer | What you get |
 |---|---|
-| 🧠 **Kernel** | Animated boot sequence, typed EventBus, process table (PID lifecycle, `ps`/`kill`), settings subsystem, localStorage persistence |
-| 🪟 **Window manager** | Drag, resize (8 handles), minimize / maximize / focus, cascading placement, glassmorphism chrome, open/close animations |
-| 📂 **Virtual filesystem** | POSIX-inspired in-memory tree with `ls` / `cd` / `cat` / `mkdir -p` / `cp` / `mv` / `rm -r` / `grep` / `tree`, proper error codes (`ENOENT`, `EISDIR`, `EEXIST`, `EPERM`) |
-| ⌨️ **Terminal** | Interactive shell with 35+ commands, history, Tab completion, output redirection (`>` and `>>`), ANSI colors, `neofetch`, `fortune`, `sudo` |
-| 📱 **Apps** | Files, Terminal, Editor (Ctrl+S), Calculator, Paint (save PNG), System Monitor (live graphs), Settings, About |
-| 🎨 **Theming** | 5 themes + 5 animated wallpapers |
-| 🔊 **Audio** | Fully procedural WebAudio sound design — boot chime, UI clicks, window swooshes. No audio files. |
+| 🧠 **Kernel** | Animated boot sequence, typed EventBus, process table, settings, localStorage persistence |
+| 🪟 **Window manager** | Drag, resize (8 handles), minimize/maximize, cascading placement, glassmorphism chrome |
+| 📂 **Virtual filesystem** | POSIX-inspired: `ls`/`cd`/`cat`/`mkdir -p`/`cp`/`mv`/`rm -r`/`grep`/`tree`, error codes |
+| ⌨️ **Terminal** | 35+ commands, command history, Tab completion, output redirection, ANSI colors |
+| 📱 **Apps** | Files, Terminal, Editor, Calculator, Paint (save PNG), System Monitor, Settings, About |
+| 🎨 **Theming** | 5 themes (Aurora, Midnight, Ember, Forest, Daylight) + 5 animated wallpapers |
+| 🔊 **Audio** | Fully procedural WebAudio — boot chime, UI clicks, window swooshes. No audio files. |
 
-## 🚀 Quick start
+---
+
+## Quick Start
 
 ```bash
+git clone https://github.com/BartoszOsiej/AURORA-OS.git
+cd AURORA-OS
 npm install          # installs esbuild (dev-only build tool)
 npm run build        # bundles to dist/
 npm run serve        # http://localhost:8080
@@ -38,6 +63,17 @@ npm run serve        # http://localhost:8080
 
 <details>
 <summary><b>🖱️ First steps inside the OS</b></summary>
+
+| Command | What it does |
+|---|---|
+| `npm run build` | esbuild bundle → `dist/main.js`, copy CSS |
+| `npm run typecheck` | strict `tsc` type checking |
+| `npm test` | core-logic test harness (EventBus, FS, shell) |
+| `npm run serve` | static server for `index.html` |
+
+---
+
+## First Steps Inside the OS
 
 1. Double-click **Terminal** on the desktop (or use the Start menu ◈)
 2. Type `help` to list all 35+ commands
@@ -48,61 +84,89 @@ npm run serve        # http://localhost:8080
 7. `ps` + `kill <pid>` to manage processes
 8. Press **Ctrl+Alt+L** to lock the system
 
-</details>
+---
 
-## 🧠 Architecture
+## Architecture
 
-```mermaid
-flowchart TD
-    B["boot()"] --> D["desktop shell"]
-    D --> WM["WindowManager<br/>drag / resize / focus"]
-    D --> PM["ProcessManager<br/>pid / ps / kill"]
-    D --> AR["AppRegistry<br/>8 apps"]
-    WM --> EB["typed EventBus<br/>every module talks only through events"]
-    PM --> EB
-    AR --> EB
-    EB --> FS["FileSystem<br/>+ localStorage persistence"]
-    EB --> SH["shell interpreter<br/>Terminal ⇄ commands ⇄ FileSystem"]
+```
+┌─────────────────────────── Browser ───────────────────────────┐
+│  boot() ──► boot screen ──► desktop shell                      │
+│                                                               │
+│  ┌────────────┐   ┌─────────────┐   ┌───────────────────┐     │
+│  │ WindowMgr  │   │ ProcessMgr  │   │    AppRegistry    │     │
+│  │ drag/resize│   │ pid/ps/kill │   │ 8 apps registered │     │
+│  └─────┬──────┘   └──────┬──────┘   └────────┬──────────┘     │
+│        └─────────────────┼───────────────────┘                 │
+│                     ┌────▼─────┐                         ┌─────▼─────┐
+│                     │ EventBus │◄── every module talks   │ FileSystem│
+│                     └────┬─────┘    only through events  │ +persist  │
+│                          │                               └───────────┘
+│                    ┌─────▼──────┐
+│                    │   shell    │  Terminal ⇄ commands.ts ⇄ FileSystem
+│                    └────────────┘
+└───────────────────────────────────────────────────────────────────┘
 ```
 
-**Design rules**
+**Design rules:**
 
-- **No direct imports between subsystems** — everything communicates over the typed `EventBus`, so each module is independently testable
-- **Pure core, thin UI** — the shell interpreter, filesystem and event bus run without a DOM; the browser only renders
+- **No direct imports between subsystems** — everything communicates over the typed `EventBus`
+- **Pure core, thin UI** — the shell interpreter, filesystem and event bus run without a DOM
 - **Zero runtime dependencies** — no React, no Redux, no bundler in the output
 
-<details>
-<summary><b>🗂️ Project structure & testing</b></summary>
+---
+
+## Project Structure
 
 ```
 aurora-os/
 ├── index.html              # Boot screen + desktop shell DOM
 ├── src/
-│   ├── main.ts             # Kernel entry: boot, desktop, taskbar, lock screen
+│   ├── main.ts             # Kernel entry
+│   ├── style.css           # Complete OS stylesheet
 │   ├── core/               # EventBus, ProcessManager, WindowManager, AppRegistry
-│   ├── fs/FileSystem.ts    # Virtual file system (paths, CRUD, persistence)
-│   ├── term/               # commands.ts (35+ commands) + Terminal.ts (shell UI)
-│   ├── apps/               # Terminal, Files, Editor, Calculator, Paint, Monitor…
-│   └── sound/SoundSystem.ts # Procedural WebAudio effects
-├── tests/run-tests.mjs     # Core-logic test harness (no DOM)
-└── scripts/copy-assets.mjs
+│   ├── fs/                 # Virtual file system
+│   ├── term/               # Interactive shell (35+ commands)
+│   ├── apps/               # Terminal, Files, Editor, Calculator, Paint, Monitor, Settings, About
+│   └── sound/              # Procedural WebAudio sound effects
+├── tests/                  # Core-logic test harness (no DOM)
+└── scripts/                # Build helpers
 ```
 
-The core logic is DOM-free and unit-tested:
+---
+
+## Tests
 
 ```bash
 npm test        # EventBus, FileSystem, shell interpreter
 npm run typecheck
 ```
 
-</details>
+Covers EventBus (emit/once/unsubscribe/error isolation), FileSystem (path
+resolution, CRUD, error codes, recursive ops) and the shell interpreter
+(echo, cd/pwd, ls, redirection, cat, mkdir, touch, wc).
 
 ---
 
-<div align="center">
+## Docker
 
-**Part of [BartoszOsiej](https://github.com/BartoszOsiej)'s portfolio** · [Live docs](https://bartoszosiej.github.io/Docs/projects/aurora-os/)
+```bash
+# Build
+docker build -t aurora-os .
 
-MIT © 2026 Bartosz Osiej
+# Run
+docker run -p 8080:80 aurora-os
 
-</div>
+# Or from GHCR
+docker pull ghcr.io/bartoszosiej/aurora-os:latest
+docker run -p 8080:80 ghcr.io/bartoszosiej/aurora-os:latest
+```
+
+---
+
+## License
+
+MIT — do whatever you want with it.
+
+---
+
+> 🤖 Generated with [Codebuff](https://codebuff.com) · [Portfolio](https://bartoszosiej.github.io/Portfolio/)
