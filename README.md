@@ -168,5 +168,3 @@ docker run -p 8080:80 ghcr.io/bartoszosiej/aurora-os:latest
 MIT — do whatever you want with it.
 
 ---
-
-> 🤖 Generated with [Codebuff](https://codebuff.com) · [Portfolio](https://bartoszosiej.github.io/Portfolio/)
