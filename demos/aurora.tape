@@ -1,4 +1,4 @@
-Output assets/aurora-demo.svg
+Output assets/aurora-demo.gif
 Set FontSize 16
 Set Width 960
 Set Height 420
