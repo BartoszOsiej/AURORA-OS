@@ -15,7 +15,7 @@
 [![Release](https://img.shields.io/badge/release-live-8A2BE2?style=for-the-badge&logo=github)](https://github.com/BartoszOsiej/AURORA-OS/releases)
 ![TypeScript](https://img.shields.io/badge/TypeScript-zero%20deps-3178C6?style=for-the-badge&logo=typescript)
 [![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/BartoszOsiej/AURORA-OS/badge)](https://securityscorecards.dev/viewer/?uri=github.com/BartoszOsiej/AURORA-OS)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/BartoszOsiej/AURORA-OS/badge)](https://scorecard.dev/viewer/?uri=github.com/BartoszOsiej/AURORA-OS)
 
 *A from-scratch desktop environment — window manager, virtual file system,
 shell, and eight applications — entirely in TypeScript with **zero runtime
