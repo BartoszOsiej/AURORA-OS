@@ -26,7 +26,6 @@ dependencies**. No frameworks, no bundler at runtime, no server.*
 > *"Your browser is now your computer."*
 
 </div>
-</div>
 
 ## Table of Contents
 
