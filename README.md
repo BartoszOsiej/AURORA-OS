@@ -27,6 +27,7 @@ dependencies**. No frameworks, no bundler at runtime, no server.*
 
 ## Table of Contents
 
+- [Demo](#-demo)
 - [Features](#features)
 - [Quick Start](#quick-start)
 - [First Steps](#first-steps-inside-the-os)
@@ -37,6 +38,18 @@ dependencies**. No frameworks, no bundler at runtime, no server.*
 - [License](#license)
 
 ---
+
+## 📺 Demo
+
+
+
+<!-- VHS auto-rendered — run: vhs demos/aurora.tape -->
+
+
+
+![AURORA OS Demo](assets/aurora-demo.gif)
+
+
 
 ## Features
 
