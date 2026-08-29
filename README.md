@@ -11,11 +11,11 @@
 **A complete operating system running in your browser.**
 
 [![npm](https://img.shields.io/npm/v/aurora-os?style=for-the-badge&logo=nodedotjs)](https://www.npmjs.com/package/aurora-os)
-[![GHCR](https://img.shields.io/badge/GHCR-image-2496ED?style=for-the-badge&logo=docker)](https://github.com/BartoszOsiej/AURORA-OS/pkgs/container/aurora-os)
-[![Release](https://img.shields.io/badge/release-live-8A2BE2?style=for-the-badge&logo=github)](https://github.com/BartoszOsiej/AURORA-OS/releases)
+[![GHCR](https://img.shields.io/badge/GHCR-image-2496ED?style=for-the-badge&logo=docker)](https://github.com/BartoszOsiej/Aurora/pkgs/container/aurora-os)
+[![Release](https://img.shields.io/badge/release-live-8A2BE2?style=for-the-badge&logo=github)](https://github.com/BartoszOsiej/Aurora/releases)
 ![TypeScript](https://img.shields.io/badge/TypeScript-zero%20deps-3178C6?style=for-the-badge&logo=typescript)
 [![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/BartoszOsiej/AURORA-OS/badge)](https://scorecard.dev/viewer/?uri=github.com/BartoszOsiej/AURORA-OS)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/BartoszOsiej/Aurora/badge)](https://scorecard.dev/viewer/?uri=github.com/BartoszOsiej/Aurora)
 
 *A from-scratch desktop environment — window manager, virtual file system,
 shell, and eight applications — entirely in TypeScript with **zero runtime
@@ -70,7 +70,7 @@ dependencies**. No frameworks, no bundler at runtime, no server.*
 ## Quick Start
 
 ```bash
-git clone https://github.com/BartoszOsiej/AURORA-OS.git
+git clone https://github.com/BartoszOsiej/Aurora.git
 cd AURORA-OS
 npm install          # installs esbuild (dev-only build tool)
 npm run build        # bundles to dist/
