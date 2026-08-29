@@ -1,5 +1,5 @@
 {
-  "name": "aurora",
+  "name": "aurora-os",
   "version": "1.0.0",
   "description": "Aurora — a complete operating system in the browser. Window manager, virtual file system, terminal with 35+ commands, 8 applications, themes, wallpapers and procedural audio. TypeScript, zero runtime dependencies.",
   "type": "module",
